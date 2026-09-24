@@ -74,7 +74,6 @@ class Planeta:
         else:
             periodo_orbital = int(periodo_orbital)
 
-
         return cls(
             id,
             nome,
@@ -86,15 +85,18 @@ class Planeta:
             agua_superficial,
             periodo_rotacao,
             periodo_orbital
-)
+        )
 
-def para_dicionario(self): # representação de um Planeta em formato JSON
-     return {
-         "id": self.id,
-         "nome": self.nome,
-         "clima": self.clima,
-         "terreno": self.terreno
-
-
-
-     }
+    def para_dicionario(self):  # representação de um Planeta em formato JSON
+        return {
+            "id": self.id,
+            "nome": self.nome,
+            "clima": self.clima,
+            "terreno": self.terreno,
+            "populacao": self.populacao,
+            "diametro": self.diametro,
+            "gravidade": self.gravidade,
+            "agua_superficial": self.agua_superficial,
+            "periodo_rotacao": self.periodo_rotacao,
+            "periodo_orbital": self.periodo_orbital
+        }

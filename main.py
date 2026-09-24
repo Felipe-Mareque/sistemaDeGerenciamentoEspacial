@@ -1,22 +1,15 @@
 from api.swapi import buscar_planetas
 from modelos.planeta import Planeta
+from servicos.armazenamento import salvar_planetas
 
 planetas = buscar_planetas()
 
-dados = next(
-    planeta for planeta in planetas
-    if planeta["population"] == "unknown"
-)
+planetas_normalizados = []
 
-planeta = Planeta.de_dicionario(dados)
+for dados in planetas:
+    planeta = Planeta.de_dicionario(dados)
+    dados_normalizados = planeta.para_dicionario()
 
-print("ID:", planeta.id)
-print("Nome:", planeta.nome)
-print("Clima:", planeta.clima)
-print("Terreno:", planeta.terreno)
-print("População:", planeta.populacao)
-print("Diâmetro:", planeta.diametro)
-print("Gravidade:", planeta.gravidade)
-print("Água superficial:", planeta.agua_superficial)
-print("Período de rotação:", planeta.periodo_rotacao)
-print("Período orbital:", planeta.periodo_orbital)
+    planetas_normalizados.append(dados_normalizados)
+
+salvar_planetas(planetas_normalizados, "dados/planetas.json")
