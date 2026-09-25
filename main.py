@@ -16,9 +16,11 @@ for dados in planetas:
 salvar_planetas(planetas_normalizados, "dados/planetas.json")
 
 tabela = TabelaHash()
-print("buscando")
-print(tabela._funcao_hash("Tatooine"))
-print(tabela._funcao_hash("Naboo"))
-print(tabela._funcao_hash("Hoth"))
-print(tabela._funcao_hash("Coruscant"))
-print("ok")
+
+for planeta in planetas_normalizados:
+    if planeta["nome"] == "Yavin IV" or planeta["nome"] == "Hoth":
+        tabela.inserir(planeta)
+
+print(tabela.tabela)
+print("Colisões:", tabela.colisoes)
+
