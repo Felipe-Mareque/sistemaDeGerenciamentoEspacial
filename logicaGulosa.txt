@@ -1,0 +1,27 @@
+Critério	Pontos
+População conhecida	+2
+Água superficial conhecida	+3
+Diâmetro conhecido	+1
+Gravidade conhecida	+1
+Período orbital conhecido	+1
+Máximo	8
+
+Começamos com um custo-base de 1 e adicionamos custos conforme algumas características:
+
+| Situação                    |        Custo |
+| --------------------------- | -----------: |
+| Diâmetro conhecido ≤ 10.000 |           +0 |
+| Diâmetro > 10.000           |           +1 |
+| Diâmetro > 20.000           | +1 adicional |
+| Diâmetro desconhecido       |       **+1** |
+| Órbita conhecida ≤ 300      |           +0 |
+| Órbita > 300                |           +1 |
+| Órbita > 500                | +1 adicional |
+| Órbita desconhecida         |       **+1** |
+| Água conhecida              |           +0 |
+| Água desconhecida           |       **+1** |
+| Gravidade conhecida         |           +0 |
+| Gravidade desconhecida      |       **+1** |
+
+
+Custo = tamanho + período orbital + risco de informação

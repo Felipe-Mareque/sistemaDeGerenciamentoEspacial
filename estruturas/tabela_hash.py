@@ -21,6 +21,17 @@ class TabelaHash:
         if self.fator_carga() >= self.limite_fator_carga:
             self._rehash()
 
+    def buscar(self, chave):
+        indice = self._funcao_hash(chave)
+
+        while self.tabela[indice] is not None:
+            if self.tabela[indice]["nome"] == chave:
+                return self.tabela[indice]
+
+            indice = (indice + 1) % self.capacidade
+
+        return None
+
     def _inserir(self, planeta, contar_colisao=True):
         chave = planeta["nome"]
         indice = self._funcao_hash(chave)
