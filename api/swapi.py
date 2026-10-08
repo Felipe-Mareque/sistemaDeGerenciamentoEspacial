@@ -8,7 +8,7 @@ def buscar_planetas():
     planetas = []
 
     while url is not None:
-        resposta = requests.get(url)
+        resposta = requests.get(url, timeout=10)
 
         if resposta.status_code != 200:
             raise Exception(f"Erro ao consultar a SWAPI: {resposta.status_code}")

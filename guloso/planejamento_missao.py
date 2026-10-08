@@ -28,3 +28,19 @@ def ordenar_candidatos(candidatos):
         key=lambda candidato: candidato["razao"],
         reverse=True
     )
+
+
+def planejar_missao(candidatos, orcamento):
+    selecionados = []
+    recurso_utilizado = 0
+    beneficio_total = 0
+
+    for candidato in candidatos:
+        if recurso_utilizado + candidato["custo"] <= orcamento:
+            selecionados.append(candidato)
+            recurso_utilizado += candidato["custo"]
+            beneficio_total += candidato["beneficio"]
+
+    recurso_restante = orcamento - recurso_utilizado
+
+    return selecionados, recurso_utilizado, recurso_restante, beneficio_total
