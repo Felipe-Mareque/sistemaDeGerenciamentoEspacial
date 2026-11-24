@@ -35,6 +35,24 @@ except Exception:
     planetas_normalizados = carregar_planetas("dados/planetas.json")
 
 
+def ler_inteiro(mensagem, minimo=None):
+    # repete a pergunta até o usuário digitar um inteiro válido (>= minimo, se informado)
+    while True:
+        entrada = input(mensagem)
+
+        try:
+            valor = int(entrada)
+        except ValueError:
+            print("Entrada inválida: digite um número inteiro.")
+            continue
+
+        if minimo is not None and valor < minimo:
+            print(f"Entrada inválida: o valor deve ser maior ou igual a {minimo}.")
+            continue
+
+        return valor
+
+
 # Cria e carrega a Tabela Hash
 tabela = TabelaHash()
 
@@ -72,17 +90,21 @@ while True:
             atributo = input("Atributo (ex: clima, terreno): ")
             valor = input("Valor: ")
 
-            resultados = pesquisar_por_atributo(
-                planetas_normalizados,
-                atributo,
-                valor
-            )
+            try:
+                resultados = pesquisar_por_atributo(
+                    planetas_normalizados,
+                    atributo,
+                    valor
+                )
+            except ValueError as erro:
+                print(erro)
+                continue
 
             for planeta in resultados:
                 print(planeta["nome"])
 
         case "3":
-            populacao_minima = int(input("População mínima: "))
+            populacao_minima = ler_inteiro("População mínima: ", minimo=0)
 
             resultados = filtrar_por_populacao_minima(
                 planetas_normalizados,
@@ -105,7 +127,7 @@ while True:
                 print(planeta["nome"], "-", planeta["clima"])
 
         case "5":
-            orcamento = int(input("Orçamento: "))
+            orcamento = ler_inteiro("Orçamento: ", minimo=0)
 
             candidatos = preparar_candidatos(planetas_normalizados)
             candidatos = ordenar_candidatos(candidatos)

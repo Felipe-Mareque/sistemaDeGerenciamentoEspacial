@@ -16,10 +16,17 @@ class TabelaHash:
         return valor % self.capacidade
 
     def inserir(self, planeta):
+        # chave única: não insere planeta com nome já existente
+        if self.buscar(planeta["nome"]) is not None:
+            return False
+
         self._inserir(planeta)
 
+        # rehash ocorre após a inserção quando o fator de carga atinge o limite
         if self.fator_carga() >= self.limite_fator_carga:
             self._rehash()
+
+        return True
 
     def buscar(self, chave):
         indice = self._funcao_hash(chave)
