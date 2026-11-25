@@ -2,7 +2,13 @@ from api.swapi import buscar_planetas
 from modelos.planeta import Planeta
 from servicos.armazenamento import salvar_planetas, carregar_planetas
 from estruturas.tabela_hash import TabelaHash
-from servicos.consultas import consultar_planeta
+from estruturas.trie import Trie
+from servicos.autocompletar import (
+    construir_trie,
+    sugerir_nomes,
+    resolver_nome,
+    consultar_com_sugestoes
+)
 from servicos.pesquisas import pesquisar_por_atributo
 from servicos.filtros import filtrar_por_populacao_minima
 from servicos.similaridade import planetas_com_clima_similar
@@ -67,6 +73,14 @@ print("Colisões:", tabela.colisoes)
 print("Fator de carga:", tabela.fator_carga())
 
 
+# Cria e carrega a Trie (índice de nomes para busca por prefixo)
+trie = construir_trie(Trie(), planetas_normalizados)
+
+print()
+print("Nomes na Trie:", trie.quantidade)
+print("Nós da Trie:", trie.total_nos)
+
+
 # Menu
 while True:
     print()
@@ -75,6 +89,7 @@ while True:
     print("3 - Filtrar por população mínima")
     print("4 - Planetas com clima similar")
     print("5 - Planejar missão")
+    print("6 - Autocompletar nome (busca por prefixo)")
     print("0 - Sair")
 
     opcao = input("Opção: ")
@@ -84,7 +99,17 @@ while True:
         case "1":
             nome = input("Nome do planeta: ")
 
-            print(consultar_planeta(tabela, nome))
+            planeta, sugestoes = consultar_com_sugestoes(tabela, trie, nome)
+
+            if planeta is not None:
+                print(planeta)
+            elif sugestoes:
+                print("Planeta não encontrado. Você quis dizer:")
+
+                for sugestao in sugestoes:
+                    print(" -", sugestao)
+            else:
+                print("Planeta não encontrado.")
 
         case "2":
             atributo = input("Atributo (ex: clima, terreno): ")
@@ -115,13 +140,20 @@ while True:
                 print(planeta["nome"], "-", planeta["populacao"])
 
         case "4":
-            nome = input("Nome do planeta: ")
+            nome = resolver_nome(trie, input("Nome do planeta: "))
+
+            if nome is None:
+                print("Planeta não encontrado.")
+                continue
 
             resultados = planetas_com_clima_similar(
                 tabela,
                 planetas_normalizados,
                 nome
             )
+
+            if not resultados:
+                print("Nenhum outro planeta com clima similar a", nome)
 
             for planeta in resultados:
                 print(planeta["nome"], "-", planeta["clima"])
@@ -154,6 +186,21 @@ while True:
             print("Recurso utilizado:", recurso_utilizado)
             print("Recurso restante:", recurso_restante)
             print("Benefício total:", beneficio_total)
+
+        case "6":
+            prefixo = input("Prefixo do nome: ")
+
+            resultados = sugerir_nomes(trie, prefixo)
+
+            if not resultados:
+                print("Nenhum planeta começa com", repr(prefixo.strip()))
+
+            for nome in resultados:
+                print(nome)
+
+            print()
+            print("Encontrados:", len(resultados))
+            print("Nós visitados na Trie:", trie.nos_visitados)
 
         case "0":
             break
